@@ -1,7 +1,7 @@
 
-modules = ["nodejs-20"]
+modules = ["nodejs-22"]
 hidden = [".config", "package-lock.json"]
-run = "npm run dev"
+run = "pnpm dev --host"
 
 [gitHubImport]
 requiredFiles = [".replit", "replit.nix", "package.json", "package-lock.json"]
@@ -18,6 +18,11 @@ deploymentTarget = "cloudrun"
 ignorePorts = false
 
 [[ports]]
+localPort = 4173
+externalPort = 8080
+exposeLocalhost = true
+
+[[ports]]
 localPort = 5173
-externalPort = 8000
+externalPort = 80
 exposeLocalhost = true
