@@ -5,12 +5,12 @@
 	import { invalidate } from "$app/navigation";
 	import { PUBLIC_SUPABASE_URL } from "$env/static/public";
 	import { marked } from "marked";
-	//import {supabase} from '$lib/supabase;'
+	import {supabase} from '$lib/supabase'
 	// let posts: any[] = $state([]);
 
 	//i
 	let { data } = $props();
-	let { posts, supabase } = $derived(data);
+	let { posts } = $derived(data);
 	let posts_ = $state(posts ?? []);
 
 	let epost = $state({ id: crypto.randomUUID(), md: "", title: "", slug: "" ,description:""});
