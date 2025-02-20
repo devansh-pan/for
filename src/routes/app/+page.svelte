@@ -2,18 +2,22 @@
 	//import { goto } from "$app/navigation";
 	//import type { PageData } from "./$types";
 	import slugify from "slugify";
-	import { invalidate } from "$app/navigation";
+	import { invalidate, invalidateAll } from "$app/navigation";
 	import { PUBLIC_SUPABASE_URL } from "$env/static/public";
 	import { marked } from "marked";
-	import {supabase} from '$lib/supabase'
+	import { supabase } from "$lib/supabase";
 	// let posts: any[] = $state([]);
-
-	//i
 	let { data } = $props();
 	let { posts } = $derived(data);
 	let posts_ = $state(posts ?? []);
-
-	let epost = $state({ id: crypto.randomUUID(), md: "", title: "", slug: "" ,description:""});
+	console.log(posts_);
+	let epost = $state({
+		id: crypto.randomUUID(),
+		md: "",
+		title: "",
+		slug: "",
+		description: "",
+	});
 	let status = $state({ message: "", type: "" });
 
 	const postsFetch = async () => {
@@ -35,22 +39,22 @@
 			status.type = "error";
 			return (status.message = "Cannot be empty ");
 		}
-		const { data, error } = await supabase
-			.from("posts")
-			.upsert([
-				{
-					id: epost.id,
-					title: epost.title,
-					content: epost.md,
-					slug: slugify(epost.title),
-				},
-			]);
+		const { data, error } = await supabase.from("posts").upsert([
+			{
+				id: epost.id,
+				title: epost.title,
+				content: epost.md,
+				slug: slugify((epost.title).toLowerCase()),
+				description:epost.description
+			},
+		]);
 		if (error) {
 			status.message = error.message;
 			status.type = "error";
 			console.log(error.message);
 		} else {
 			status.message = "Posted successfully";
+			invalidateAll();
 			status.type = "success";
 			const existingPostIndex = posts_.findIndex(
 				(post) => post.id === epost.id,
@@ -65,13 +69,18 @@
 			} else {
 				posts_.push(epost);
 			}
-			epost = { title: "", md: "", slug: "", id: crypto.randomUUID(),description:"" };
+			epost = {
+				title: "",
+				md: "",
+				slug: "",
+				id: crypto.randomUUID(),
+				description: "",
+			};
 			setTimeout(() => {
 				status.message = "";
 				status.type = "";
 			}, 3000);
 		}
-		console.log({ data });
 	}
 
 	async function deletePost(id: string): Promise<null> {
@@ -85,13 +94,12 @@
 			status.type = "success";
 			status.message = "Deleted successfully";
 			posts_ = posts_.filter((post) => post.id !== id);
+			invalidateAll();
 		} else if (error) {
 			status.type = "error";
 			status.message = error.message;
+			console.log(error.message);
 		}
-		console.log({ error, data });
-		invalidate(PUBLIC_SUPABASE_URL + "/rest/v1/posts");
-
 		return null;
 	}
 </script>
@@ -103,26 +111,27 @@
 
 <br />
 {#if posts !== null}<div class="flex flex-col">
-		{#each posts_ as post, i}
+		{#each posts as post, i}
 			<div class="flex flex-col">
-				<div class="border p-2">
+				<div class="border p-4">
 					<a href="/post/{post.slug}">
-						<h2 class="m-2 text-2xl font-bold">{post.title}</h2></a
+						<h2 class="my-2 text-2xl font-bold">{post.title}</h2></a
 					>
 
-					<div class="prose">{@html marked.parse(post.content)}</div>
-					<button
-						class="m-2 w-25 border p-2"
-						onclick={() => deletePost(post.id)}>Delete post</button
+					<div class="prose">{@html marked.parse(post?.description)}</div>
+					<br />
+					<button class="m-1 border p-1" onclick={() => deletePost(post.id)}
+						>Delete</button
 					>
 					<button
 						onclick={() => {
 							(epost.title = post.title),
 								(epost.md = post.content),
 								(epost.id = post.id),
-								(epost.slug = post.slug);
+								(epost.slug = post.slug),
+							(epost.description = post.description)
 						}}
-						class="m-2 w-25 border p-2">Update</button
+						class="m-1 border p-1">Edit</button
 					>
 				</div>
 			</div>
@@ -158,7 +167,7 @@
 		{@html marked.parse(epost.md)}
 	</div>
 	<label for="content">
-		Post content : MD supported
+		Post content
 		<textarea
 			rows="2"
 			class="field-content [field-sizing:content] min-h-25 w-full border p-2"
@@ -169,17 +178,30 @@
 		>
 		</textarea>
 	</label>
+	<div class="m-1" id="desc">
+		
+		<label for="desc"
+			>Description:
+			<input class="peer" type="checkbox" />
+			<textarea
+				class="border hidden peer-checked:block  w-full p-2"
+				id="desc"
+				name="desc"
+				bind:value={epost.description}
+			></textarea>
+		</label>
+	</div>
 	<button
 		disabled={epost.md === "" || epost.title === ""}
 		onclick={() => {
 			(epost.id = crypto.randomUUID()), (epost.md = ""), (epost.title = "");
 		}}
-		class="m-2 border p-2 disabled:text-gray-900/50">Discard</button
+		class="m-2 border p-1 disabled:hidden">Discard</button
 	>
 	<button
 		disabled={epost.md === "" || epost.title === ""}
 		formaction="/"
-		class="m-4 ml-50 rounded border p-2 text-xl disabled:text-gray-400"
+		class="m-4 ml-50 disabled:hidden border p-1 text-xl"
 		type="submit">Post</button
 	>
 </form>

@@ -18,7 +18,7 @@
 </script>
 <div class="flex flex-col min-h-dvh">
 <header class="p-4 border-b ">
-	<p class="text-3xl font-bold">Svelty</p>
+	<a href="/"><p class="text-3xl font-bold">Svelty</p></a>
 </header>
 <main class="grow p-2">
 {@render children()}

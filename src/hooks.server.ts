@@ -30,7 +30,7 @@ const supabase: Handle = async ({ event, resolve }) => {
           });
         },
       },
-    }
+    },
   );
 
   /**
@@ -74,8 +74,10 @@ const authGuard: Handle = async ({ event, resolve }) => {
   event.locals.session = session;
   event.locals.user = user;
 
-  if (!event.locals.session && event.url.pathname.startsWith("/app")) {
-    redirect(303, "/auth");
+  if (import.meta.env.PROD) {
+    if (!event.locals.session && event.url.pathname.startsWith("/app")) {
+      redirect(303, "/auth");
+    }
   }
 
   if (event.locals.session && event.url.pathname === "/auth") {
