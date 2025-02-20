@@ -20,7 +20,6 @@
     Go to App
   </button>
 </div>
-<h2 class="text-2xl font-bold">Session</h2>
-<pre>{JSON.stringify(data.session, null, 2)}</pre>
+
 <h2 class="text-2xl font-bold">User</h2>
-<pre>{JSON.stringify(data.user, null, 2)}</pre>
+<pre>{JSON.stringify(data?.user?.user_metadata?.full_name, null, 2)}</pre>

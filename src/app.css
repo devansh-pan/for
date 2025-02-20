@@ -1,6 +1,27 @@
-@import 'tailwindcss';
 
-@config '../tailwind.config.ts';
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wdth,wght,XOPQ,XTRA,YOPQ@8..144,25..151,100..1000,90,496,87&display=swap');
+@import 'tailwindcss';
+@plugin "@tailwindcss/typography";
+
+@theme {
+ --font-flex: 'Roboto Flex','Noto Sans', sans-serif ;
+}
+@layer base {
+   p ,body{
+    font-family: var(--font-flex);
+    font-stretch: normal;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    webkit-font-smoothing: antialiased;
+   
+  }
+  code, pre {
+    font-family: var(--font-mono);
+  }
+  .border {
+    border: 1px solid var(--color-gray-300);
+  }
+}
 
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,

@@ -1,5 +1,4 @@
-
-modules = ["nodejs-22"]
+modules = ["nodejs-22", "svelte-kit-node-20"]
 hidden = [".config", "package-lock.json"]
 run = "pnpm dev --host"
 
@@ -26,3 +25,32 @@ exposeLocalhost = true
 localPort = 5173
 externalPort = 80
 exposeLocalhost = true
+
+[workflows]
+
+[[workflows.workflow]]
+name = "dev"
+mode = "sequential"
+author = 39341409
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pnpm dev --host"
+
+[[workflows.workflow]]
+name = "build"
+mode = "sequential"
+author = 39341409
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pnpm build"
+
+[[workflows.workflow]]
+name = "preview"
+mode = "sequential"
+author = 39341409
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pnpm preview"
