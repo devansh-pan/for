@@ -114,11 +114,11 @@
 		{#each posts as post, i}
 			<div class="flex flex-col">
 				<div class="border p-4">
-					<a href="/post/{post.slug}">
+					<a href="/posts/{post.slug}">
 						<h2 class="my-2 text-2xl font-bold">{post.title}</h2></a
 					>
 
-					<div class="prose">{@html marked.parse(post?.description)}</div>
+					<div class="prose">{@html marked.parse(post?.description ?? "No data")}</div>
 					<br />
 					<button class="m-1 border p-1" onclick={() => deletePost(post.id)}
 						>Delete</button
