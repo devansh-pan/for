@@ -1,12 +1,13 @@
 <script lang="ts">
 	//import { goto } from "$app/navigation";
-	//import type { PageData } from "./$types";
+	import type { Snapshot} from "./$types";
 	import slugify from "slugify";
 	import { invalidate, invalidateAll } from "$app/navigation";
 	import { PUBLIC_SUPABASE_URL } from "$env/static/public";
 	import { marked } from "marked";
 	import { supabase } from "$lib/supabase";
 	// let posts: any[] = $state([]);
+	
 	let { data } = $props();
 	let { posts } = $derived(data);
 	let posts_ = $state(posts ?? []);
@@ -19,7 +20,10 @@
 		description: "",
 	});
 	let status = $state({ message: "", type: "" });
-
+export const snapshot: Snapshot = {
+		capture: () => epost.md,
+		restore: (value) => epost.md = value
+	};
 	const postsFetch = async () => {
 		let { data, error } = await supabase
 			.from("posts")
@@ -192,7 +196,7 @@
 		</label>
 	</div>
 	<button
-		disabled={epost.md === "" || epost.title === ""}
+		disabled={epost.md === "" && epost.title === ""}
 		onclick={() => {
 			(epost.id = crypto.randomUUID()), (epost.md = ""), (epost.title = "");
 		}}

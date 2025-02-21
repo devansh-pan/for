@@ -3,9 +3,9 @@ import { redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ locals: { supabase } }) => {
-  const { data: events } = await supabase.from("posts").select("*").limit(5);
+  const { data: posts} = await supabase.from("posts").select("*");
 
-  return { events: events ?? [] };
+  return { posts: posts ?? [] };
 };
 
 export const actions = {

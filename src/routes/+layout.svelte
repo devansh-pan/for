@@ -25,7 +25,8 @@
 		{@render children()}
 	</main>
 	<footer class="p-4 border-t">
-		<small>Svelty &copy; 2025</small>
+		<small class="text-gray-700">Svelty &copy; 2025</small>
+		<br>
 		<a href="/auth">Login</a>
 	</footer>
 </div>
