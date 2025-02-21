@@ -10,9 +10,6 @@
 </script>
 
 <div class="flex gap-4">
-  <form method="POST" action="?/github">
-    <button type="submit" class="btn preset-filled">GitHub OAuth</button>
-  </form>
   <form method="POST" action="?/logout">
     <button type="submit" class="btn preset-filled">Sign Out</button>
   </form>
