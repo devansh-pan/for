@@ -15,16 +15,14 @@
     {#each posts as post}
       <div class="border p-4 ">
        <a href="/posts/{post?.slug}"> <h2 class="text-xl font-bold">{post?.title ?? "Svelty"}</h2></a>
-        <small class="italic">{post.author}</small><br>
-        <small>{(post.posted_at)}</small><br>
+        <small class="italic">{post.author}</small>&nbsp;
+        <small>{new Intl.DateTimeFormat(navigator.language,{'month':'long','year':'numeric','day':'numeric'}).format(new Date(post.posted_at))}</small><br>
         <p class="mt-2">{post?.description}</p>
       </div>
     {/each}
   </div>
 {/if}
 <div class="flex gap-4">
-  <button type="button" class="btn preset-filled" onclick={() => goto("/app")}>
-    Go to App
-  </button>
+  
 </div>
 

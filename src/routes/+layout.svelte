@@ -1,6 +1,6 @@
 <script lang="ts">
 	import "../app.css";
-	import { invalidate } from "$app/navigation";
+	import { invalidate ,goto} from "$app/navigation";
 	import { onMount } from "svelte";
 
 	let { children, data } = $props();
@@ -24,9 +24,12 @@
 	<main class="grow p-2">
 		{@render children()}
 	</main>
-	<footer class="p-4 border-t">
-		<small class="text-gray-700">Svelty &copy; 2025</small>
-		<br>
-		<a href="/auth">Login</a>
+	<footer class="p-4 *:text-sm *:text-gray-800 border-t">
+		<small class="text-gray-700">Svelty &copy; {new Date().getFullYear()}</small>
+		<br />
+		<a href="/auth">Login</a><br>
+		<button type="button" class="btn text-sm preset-filled" onclick={() => goto("/app")}>
+     Dashboard
+		</button>
 	</footer>
 </div>

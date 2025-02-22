@@ -1,13 +1,11 @@
 <script lang="ts">
 	//import { goto } from "$app/navigation";
-	import type { Snapshot} from "./$types";
+	import type { Snapshot } from "./$types";
 	import slugify from "slugify";
 	import { invalidate, invalidateAll } from "$app/navigation";
 	import { PUBLIC_SUPABASE_URL } from "$env/static/public";
 	import { marked } from "marked";
 	import { supabase } from "$lib/supabase";
-	// let posts: any[] = $state([]);
-	
 	let { data } = $props();
 	let { posts } = $derived(data);
 	let posts_ = $state(posts ?? []);
@@ -20,9 +18,9 @@
 		description: "",
 	});
 	let status = $state({ message: "", type: "" });
-export const snapshot: Snapshot = {
+	export const snapshot: Snapshot = {
 		capture: () => epost.md,
-		restore: (value) => epost.md = value
+		restore: (value) => (epost.md = value),
 	};
 	const postsFetch = async () => {
 		let { data, error } = await supabase
@@ -48,8 +46,9 @@ export const snapshot: Snapshot = {
 				id: epost.id,
 				title: epost.title,
 				content: epost.md,
-				slug: slugify((epost.title).toLowerCase()),
-				description:epost.description
+				slug: epost.slug.toLowerCase(),
+				description: epost.description,
+				posted_at: new Date().toISOString(),
 			},
 		]);
 		if (error) {
@@ -122,7 +121,9 @@ export const snapshot: Snapshot = {
 						<h2 class="my-2 text-2xl font-bold">{post.title}</h2></a
 					>
 
-					<div class="prose">{@html marked.parse(post?.description ?? "No data")}</div>
+					<div class="prose">
+						{@html marked.parse(post?.description ?? "No data")}
+					</div>
 					<br />
 					<button class="m-1 border p-1" onclick={() => deletePost(post.id)}
 						>Delete</button
@@ -133,7 +134,7 @@ export const snapshot: Snapshot = {
 								(epost.md = post.content),
 								(epost.id = post.id),
 								(epost.slug = post.slug),
-							(epost.description = post.description)
+								(epost.description = post.description);
 						}}
 						class="m-1 border p-1">Edit</button
 					>
@@ -183,22 +184,26 @@ export const snapshot: Snapshot = {
 		</textarea>
 	</label>
 	<div class="m-1" id="desc">
-		
 		<label for="desc"
 			>Description:
 			<input class="peer" type="checkbox" />
 			<textarea
-				class="border hidden peer-checked:block  w-full p-2"
+				class="border hidden peer-checked:block w-full p-2"
 				id="desc"
 				name="desc"
 				bind:value={epost.description}
 			></textarea>
 		</label>
+		<br>
+		<label for="slug">Slug: &nbsp;<input type="checkbox" class="peer">
+			
+			<input class=" border p-1 peer-checked:block hidden" type="text" id="slug" name="slug" bind:value={epost.slug} >
+		</label>
 	</div>
 	<button
 		disabled={epost.md === "" && epost.title === ""}
 		onclick={() => {
-			(epost.id = crypto.randomUUID()), (epost.md = ""), (epost.title = "");
+			(epost.id = crypto.randomUUID()), (epost.md = ""),(epost.description = ''), (epost.title = ""),(epost.slug = '');
 		}}
 		class="m-2 border p-1 disabled:hidden">Discard</button
 	>
