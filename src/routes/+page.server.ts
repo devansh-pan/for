@@ -3,7 +3,7 @@ import { redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ locals: { supabase } }) => {
-  const { data: posts} = await supabase.from("posts").select("*");
+  const { data: posts} = await supabase.from("posts").select("*").neq("deleted", true);
 
   return { posts: posts ?? [] };
 };
